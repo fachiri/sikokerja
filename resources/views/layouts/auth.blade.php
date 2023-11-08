@@ -35,8 +35,8 @@
 						@yield('content')
 					</div>
 				</div>
-				<div class="col-lg-7 d-none d-lg-block">
-					<div id="auth-right"></div>
+				<div class="col-lg-7 d-none d-lg-block bg-primary p-0">
+					<img src="{{ asset('images/bg.jpg') }}" alt="Background" class="object-fit-cover w-100 h-100 opacity-25">
 				</div>
 			</div>
 		</div>
