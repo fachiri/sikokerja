@@ -1,8 +1,6 @@
 @extends('layouts.dashboard')
 @section('title', 'Edit Data')
 @push('css')
-	<link rel="stylesheet" href="{{ asset('css/extensions/sweetalert2.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/static/extra-component-sweetalert.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/extensions/filepond.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/extensions/filepond-plugin-image-preview.css') }}">
 @endpush
@@ -91,7 +89,6 @@
 @endsection
 @push('scripts')
 	<script src="{{ asset('js/extensions/simple-datatables.js') }}"></script>
-	<script src="{{ asset('js/extensions/sweetalert2.min.js') }}"></script>
 	<script src="{{ asset('js/extensions/filepond-plugin-file-validate-size.min.js') }}"></script>
 	<script src="{{ asset('js/extensions/filepond-plugin-file-validate-type.min.js') }}"></script>
 	<script src="{{ asset('js/extensions/filepond-plugin-image-crop.min.js') }}"></script>
@@ -101,5 +98,4 @@
 	<script src="{{ asset('js/extensions/filepond-plugin-image-resize.min.js') }}"></script>
 	<script src="{{ asset('js/extensions/filepond.js') }}"></script>
 	<script src="{{ asset('js/static/add.js') }}"></script>
-	<x-main.alerts />
 @endpush

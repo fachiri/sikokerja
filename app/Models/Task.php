@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Ramsey\Uuid\Uuid;
 
@@ -19,7 +20,8 @@ class Task extends Model
         'gardu',
         'progres',
         'pengawas_k3',
-        'koordinat',
+        'latitude',
+        'longitude',
         'dokumentasi',
     ];
 
@@ -34,5 +36,10 @@ class Task extends Model
     public function documentations(): HasMany
     {
         return $this->hasMany(Documentation::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'pengawas_k3');
     }
 }

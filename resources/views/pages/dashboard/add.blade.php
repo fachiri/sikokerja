@@ -58,17 +58,31 @@
 						</div>
 						<div class="mb-3">
 							<label for="pengawas_k3" class="form-label">Pengawas K3</label>
-							<input type="text" class="form-control @error('pengawas_k3') is-invalid @enderror" name="pengawas_k3" id="pengawas_k3" value="{{ old('pengawas_k3') }}">
+							<select name="pengawas_k3" id="pengawas_k3" class="form-select @error('pengawas_k3') is-invalid @enderror">
+								<option value="" hidden>-- Pilih Pengawas --</option>
+								@foreach ($pengawas as $item)
+									<option value="{{ $item->id }}" {{ $item->id == old('pengawas_k3') ? 'selected' : '' }}>{{ $item->name }}</option>
+								@endforeach
+							</select>
 							@error('pengawas_k3')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
 						</div>
-						<div class="mb-3">
-							<label for="koordinat" class="form-label">Titik Koordinat</label>
-							<input type="text" class="form-control @error('koordinat') is-invalid @enderror" name="koordinat" id="koordinat" value="{{ old('koordinat') }}">
-							@error('koordinat')
-								<div class="invalid-feedback">{{ $message }}</div>
-							@enderror
+						<div class="row">
+							<div class="col-12 col-lg-6 mb-3">
+								<label for="latitude" class="form-label">Latitude</label>
+								<input type="text" class="form-control @error('latitude') is-invalid @enderror" name="latitude" id="latitude" value="{{ old('latitude') }}">
+								@error('latitude')
+									<div class="invalid-feedback">{{ $message }}</div>
+								@enderror
+							</div>
+							<div class="col-12 col-lg-6 mb-3">
+								<label for="longitude" class="form-label">Longitude</label>
+								<input type="text" class="form-control @error('longitude') is-invalid @enderror" name="longitude" id="longitude" value="{{ old('longitude') }}">
+								@error('longitude')
+									<div class="invalid-feedback">{{ $message }}</div>
+								@enderror
+							</div>
 						</div>
 						<div class="mb-3">
 							<label for="dokumentasi" class="form-label">Dokumentasi</label>

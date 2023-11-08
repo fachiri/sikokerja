@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Documentation;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,12 +17,14 @@ class DashboardController extends Controller
 
     public function add()
     {
-        return view('pages.dashboard.add');
+        $pengawas = User::where('role', 'PENGAWAS')->get();
+
+        return view('pages.dashboard.add', compact('pengawas'));
     }
 
     public function report()
     {
-        $tasks = Task::all();
+        $tasks = Task::with('user')->get();
 
         return view('pages.dashboard.report', compact('tasks'));
     }
@@ -46,11 +49,12 @@ class DashboardController extends Controller
                 'gardu' => 'required|string|max:255',
                 'progres' => 'required|numeric|between:0,100',
                 'pengawas_k3' => 'required|string|max:255',
-                'koordinat' => 'required|string|max:255',
+                'latitude' => 'required|string|max:255',
+                'longitude' => 'required|string|max:255',
             ] + $dokumentasiRules);
 
             $input = $request->only([
-                'nama_paket', 'vendor', 'jtm', 'jtr', 'gardu', 'progres', 'pengawas_k3', 'koordinat'
+                'nama_paket', 'vendor', 'jtm', 'jtr', 'gardu', 'progres', 'pengawas_k3', 'latitude', 'longitude'
             ]);
 
             $data = new Task();
@@ -68,6 +72,8 @@ class DashboardController extends Controller
             return redirect()->route('dashboard.report')->with('success', 'Data berhasil disimpan.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Throwable $th) {
+            return redirect()->back()->withErrors($th->getMessage())->withInput();
         }
     }
 

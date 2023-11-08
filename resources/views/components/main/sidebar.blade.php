@@ -9,6 +9,12 @@
 	                'hasSubItems' => false,
 	                'link' => route('dashboard.index'),
 	            ],
+							(object) [
+	                'label' => 'Pengguna',
+	                'icon' => 'bi bi-people-fill',
+	                'hasSubItems' => false,
+	                'link' => route('dashboard.users.index'),
+	            ],
 	            (object) [
 	                'label' => 'Tambah Data',
 	                'icon' => 'bi bi-plus-square-fill',
@@ -36,7 +42,7 @@
 	                'label' => 'Keluar',
 	                'icon' => 'bi bi-door-closed-fill',
 	                'hasSubItems' => false,
-	                'link' => '#',
+	                'link' => route('auth.logout'),
 	            ],
 	        ],
 	    ],

@@ -17,8 +17,9 @@ return new class extends Migration
             $table->integer('jtr');
             $table->string('gardu');
             $table->integer('progres');
-            $table->string('pengawas_k3');
-            $table->string('koordinat');
+            $table->foreignId('pengawas_k3')->constrained('users')->onDelete('cascade');
+            $table->string('latitude');
+            $table->string('longitude');
             $table->timestamps();
         });
     }

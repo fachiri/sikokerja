@@ -3,8 +3,6 @@
 @push('css')
 	<link rel="stylesheet" href="{{ asset('css/extensions/simple-datatable-style.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/extensions/table-datatable.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/extensions/sweetalert2.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/static/extra-component-sweetalert.css') }}">
 @endpush
 
 @section('content')
@@ -36,8 +34,8 @@
 									<td>{{ $task->jtr }}</td>
 									<td>{{ $task->gardu }}</td>
 									<td>{{ $task->progres }}%</td>
-									<td>{{ $task->pengawas_k3 }}</td>
-									<td>{{ $task->koordinat }}</td>
+									<td>{{ $task->user->name }}</td>
+									<td>{{ $task->latitude }}, {{ $task->longitude }}</td>
 									<td>
 										<a href="{{ route('dashboard.dokumentasi', $task->uuid) }}" class="btn btn-primary btn-sm m-1">
 											<i class="bi bi-images"></i>
@@ -67,7 +65,5 @@
 
 @push('scripts')
 	<script src="{{ asset('js/extensions/simple-datatables.js') }}"></script>
-	<script src="{{ asset('js/extensions/sweetalert2.min.js') }}"></script>
 	<script src="{{ asset('js/static/report.js') }}"></script>
-	<x-main.alerts />
 @endpush
