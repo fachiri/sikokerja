@@ -57,7 +57,7 @@
 									</div>
 									<div>
 										<label for="no_telp" class="form-label">No. Telpon</label>
-										<input type="text" class="form-control @error('no_telp') is-invalid @enderror" name="no_telp" id="no_telp" value="{{ old('no_telp') }}">
+										<input type="text" class="form-control @error('no_telp') is-invalid @enderror" name="no_telp" id="no_telp" value="{{ old('no_telp') }}" maxlength="12">
 										@error('no_telp')
 											<div class="invalid-feedback">{{ $message }}</div>
 										@enderror
@@ -91,12 +91,12 @@
 													<small class="badge text-bg-primary">{{ $user->role }}</small>
 												@break
 	
-												@case('PENGAWAS')
+												@case('VENDOR')
 													<small class="badge text-bg-secondary">{{ $user->role }}</small>
 												@break
 	
 												@default
-													<small class="badge text-bg-light">{{ $user->role }}</small>
+													<small class="badge text-dark border border-dark">{{ $user->role }}</small>
 											@endswitch
 										</td>
 										<td>{{ $user->name }}</td>
@@ -155,7 +155,7 @@
 															</div>
 															<div>
 																<label for="no_telp-{{ $user->uuid }}" class="form-label">No. Telpon</label>
-																<input type="text" class="form-control @error('no_telp') is-invalid @enderror" name="no_telp" id="no_telp-{{ $user->uuid }}" value="{{ $user->no_telp }}">
+																<input type="text" class="form-control @error('no_telp') is-invalid @enderror" name="no_telp" id="no_telp-{{ $user->uuid }}" value="{{ $user->no_telp }}" maxlength="12">
 																@error('no_telp')
 																	<div class="invalid-feedback">{{ $message }}</div>
 																@enderror
@@ -168,13 +168,7 @@
 													</form>
 												</div>
 											</div>
-											{{-- <form action="{{ route('dashboard.delete', $user->uuid) }}" method="POST" class="d-inline">
-												@csrf
-												@method('DELETE')
-												<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-													<i class="bi bi-trash-fill"></i>
-												</button>
-											</form> --}}
+											<x-modal.delete :id="'deleteModal-'. $user->uuid" :route="route('dashboard.users.delete', $user->uuid)" :data="$user->name" />
 										</td>
 									</tr>
 								@endforeach

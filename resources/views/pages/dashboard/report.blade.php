@@ -29,12 +29,12 @@
 							@foreach ($tasks as $task)
 								<tr>
 									<td>{{ $task->nama_paket }}</td>
-									<td>{{ $task->vendor }}</td>
+									<td>{{ $task->vendor->user->name }}</td>
 									<td>{{ $task->jtm }}</td>
 									<td>{{ $task->jtr }}</td>
 									<td>{{ $task->gardu }}</td>
 									<td>{{ $task->progres }}%</td>
-									<td>{{ $task->user->name }}</td>
+									<td>{{ $task->vendor->pengawas_k3 ?? '-' }}</td>
 									<td>{{ $task->latitude }}, {{ $task->longitude }}</td>
 									<td>
 										<a href="{{ route('dashboard.dokumentasi', $task->uuid) }}" class="btn btn-primary btn-sm m-1">

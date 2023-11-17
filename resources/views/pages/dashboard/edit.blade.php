@@ -20,9 +20,14 @@
 							@enderror
 						</div>
 						<div class="mb-3">
-							<label for="vendor" class="form-label">Vendor</label>
-							<input type="text" class="form-control @error('vendor') is-invalid @enderror" name="vendor" id="vendor" value="{{ $task->vendor }}">
-							@error('vendor')
+							<label for="vendor_id" class="form-label">Vendor</label>
+							<select class="form-select @error('vendor_id') is-invalid @enderror" name="vendor_id" id="vendor_id">
+								<option value="" hidden>-- Pilih Vendor --</option>
+								@foreach ($vendors as $vendor)
+									<option value="{{ $vendor->id }}" {{ $vendor->id == $task->vendor->id ? 'selected' : '' }}>{{ $vendor->user->name }}</option>
+								@endforeach
+							</select>
+							@error('vendor_id')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
 						</div>
@@ -59,15 +64,28 @@
 						</div>
 						<div class="mb-3">
 							<label for="pengawas_k3" class="form-label">Pengawas K3</label>
-							<input type="text" class="form-control @error('pengawas_k3') is-invalid @enderror" name="pengawas_k3" id="pengawas_k3" value="{{ $task->pengawas_k3 }}">
-							@error('pengawas_k3')
-								<div class="invalid-feedback">{{ $message }}</div>
-							@enderror
+							<input type="text" class="form-control" id="pengawas_k3" value="{{ $task->vendor->pengawas_k3 ?? '-' }}" disabled>
+						</div>
+						<div class="row">
+							<div class="col-12 col-lg-6 mb-3">
+								<label for="latitude" class="form-label">Latitude</label>
+								<input type="text" class="form-control @error('latitude') is-invalid @enderror" name="latitude" id="latitude" value="{{ $task->latitude }}">
+								@error('latitude')
+									<div class="invalid-feedback">{{ $message }}</div>
+								@enderror
+							</div>
+							<div class="col-12 col-lg-6 mb-3">
+								<label for="longitude" class="form-label">Longitude</label>
+								<input type="text" class="form-control @error('longitude') is-invalid @enderror" name="longitude" id="longitude" value="{{ $task->longitude }}">
+								@error('longitude')
+									<div class="invalid-feedback">{{ $message }}</div>
+								@enderror
+							</div>
 						</div>
 						<div class="mb-3">
-							<label for="koordinat" class="form-label">Titik Koordinat</label>
-							<input type="text" class="form-control @error('koordinat') is-invalid @enderror" name="koordinat" id="koordinat" value="{{ $task->koordinat }}">
-							@error('koordinat')
+							<label for="keterangan" class="form-label">Keterangan</label>
+							<input type="text" class="form-control @error('keterangan') is-invalid @enderror" name="keterangan" id="keterangan" value="{{ $task->keterangan }}">
+							@error('keterangan')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
 						</div>

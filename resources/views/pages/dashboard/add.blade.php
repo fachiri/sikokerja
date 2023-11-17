@@ -19,9 +19,14 @@
 							@enderror
 						</div>
 						<div class="mb-3">
-							<label for="vendor" class="form-label">Vendor</label>
-							<input type="text" class="form-control @error('vendor') is-invalid @enderror" name="vendor" id="vendor" value="{{ old('vendor') }}">
-							@error('vendor')
+							<label for="vendor_id" class="form-label">Vendor</label>
+							<select class="form-select @error('vendor_id') is-invalid @enderror" name="vendor_id" id="vendor_id">
+								<option value="" hidden>-- Pilih Vendor --</option>
+								@foreach ($vendors as $vendor)
+									<option value="{{ $vendor->id }}" {{ $vendor->id == old('vendor_id') ? 'selected' : '' }}>{{ $vendor->user->name }}</option>
+								@endforeach
+							</select>
+							@error('vendor_id')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
 						</div>
@@ -56,18 +61,6 @@
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
 						</div>
-						<div class="mb-3">
-							<label for="pengawas_k3" class="form-label">Pengawas K3</label>
-							<select name="pengawas_k3" id="pengawas_k3" class="form-select @error('pengawas_k3') is-invalid @enderror">
-								<option value="" hidden>-- Pilih Pengawas --</option>
-								@foreach ($pengawas as $item)
-									<option value="{{ $item->id }}" {{ $item->id == old('pengawas_k3') ? 'selected' : '' }}>{{ $item->name }}</option>
-								@endforeach
-							</select>
-							@error('pengawas_k3')
-								<div class="invalid-feedback">{{ $message }}</div>
-							@enderror
-						</div>
 						<div class="row">
 							<div class="col-12 col-lg-6 mb-3">
 								<label for="latitude" class="form-label">Latitude</label>
@@ -83,6 +76,13 @@
 									<div class="invalid-feedback">{{ $message }}</div>
 								@enderror
 							</div>
+						</div>
+						<div class="mb-3">
+							<label for="keterangan" class="form-label">Keterangan</label>
+							<input type="text" class="form-control @error('keterangan') is-invalid @enderror" name="keterangan" id="keterangan" value="{{ old('keterangan') }}">
+							@error('keterangan')
+								<div class="invalid-feedback">{{ $message }}</div>
+							@enderror
 						</div>
 						<div class="mb-3">
 							<label for="dokumentasi" class="form-label">Dokumentasi</label>

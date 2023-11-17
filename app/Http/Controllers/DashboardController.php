@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Documentation;
 use App\Models\Task;
 use App\Models\User;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,14 +18,14 @@ class DashboardController extends Controller
 
     public function add()
     {
-        $pengawas = User::where('role', 'PENGAWAS')->get();
+        $vendors = Vendor::with('user')->get();
 
-        return view('pages.dashboard.add', compact('pengawas'));
+        return view('pages.dashboard.add', compact('vendors'));
     }
 
     public function report()
     {
-        $tasks = Task::with('user')->get();
+        $tasks = Task::with('vendor')->get();
 
         return view('pages.dashboard.report', compact('tasks'));
     }
@@ -43,18 +44,18 @@ class DashboardController extends Controller
 
             $request->validate([
                 'nama_paket' => 'required|string|max:255',
-                'vendor' => 'required|string|max:255',
+                'vendor_id' => 'required|string|max:255',
                 'jtm' => 'required|numeric',
                 'jtr' => 'required|numeric',
                 'gardu' => 'required|string|max:255',
                 'progres' => 'required|numeric|between:0,100',
-                'pengawas_k3' => 'required|string|max:255',
                 'latitude' => 'required|string|max:255',
                 'longitude' => 'required|string|max:255',
+                'keterangan' => 'required|string|max:255',
             ] + $dokumentasiRules);
 
             $input = $request->only([
-                'nama_paket', 'vendor', 'jtm', 'jtr', 'gardu', 'progres', 'pengawas_k3', 'latitude', 'longitude'
+                'nama_paket', 'vendor_id', 'jtm', 'jtr', 'gardu', 'progres', 'latitude', 'longitude', 'keterangan'
             ]);
 
             $data = new Task();
@@ -80,8 +81,9 @@ class DashboardController extends Controller
     public function edit($uuid)
     {
         $task = Task::where('uuid', $uuid)->first();
+        $vendors = Vendor::with('user')->get();
 
-        return view('pages.dashboard.edit', compact('task'));
+        return view('pages.dashboard.edit', compact('task', 'vendors'));
     }
 
     public function update(Request $request, $uuid)
@@ -98,17 +100,18 @@ class DashboardController extends Controller
 
             $request->validate([
                 'nama_paket' => 'required|string|max:255',
-                'vendor' => 'required|string|max:255',
+                'vendor_id' => 'required|string|max:255',
                 'jtm' => 'required|numeric',
                 'jtr' => 'required|numeric',
                 'gardu' => 'required|string|max:255',
                 'progres' => 'required|numeric|between:0,100',
-                'pengawas_k3' => 'required|string|max:255',
-                'koordinat' => 'required|string|max:255',
+                'keterangan' => 'required|string|max:255',
+                'latitude' => 'required|string|max:255',
+                'longitude' => 'required|string|max:255',
             ] + $dokumentasiRules);
 
             $input = $request->only([
-                'nama_paket', 'vendor', 'jtm', 'jtr', 'gardu', 'progres', 'pengawas_k3', 'koordinat'
+                'nama_paket', 'vendor_id', 'jtm', 'jtr', 'gardu', 'progres', 'latitude', 'longitude', 'keterangan'
             ]);
 
             $data = Task::where('uuid', $uuid)->first();
@@ -116,7 +119,6 @@ class DashboardController extends Controller
             $data->save();
 
             if ($request->hasFile('dokumentasi')) {
-                Documentation::where('task_id', $data->id)->delete();
                 foreach ($request->file('dokumentasi') as $file) {
                     $filePath = $file->store('public/dokumentasi');
                     Documentation::create([

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -28,9 +29,11 @@ class UserController extends Controller
                 'no_telp' => 'required|digits:12|unique:users,no_telp',
             ]);
 
-            $data = new User();
-            $data->fill($request->only(['role', 'name', 'username', 'email', 'no_telp']) + ['password' => Hash::make($request->username)]);
-            $data->save();
+            $data = User::create($request->only(['role', 'name', 'username', 'email', 'no_telp']) + ['password' => Hash::make($request->username)]);
+
+            if ($data->role == 'VENDOR') {
+                Vendor::create(['user_id' => $data->id]);
+            }
 
             return redirect()->route('dashboard.users.index')->with('success', 'Data berhasil disimpan.');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -45,5 +48,18 @@ class UserController extends Controller
         // dd($request);
 
         // return view('pages.dashboard.user', compact('users'));
+    }
+
+    public function delete($uuid)
+    {
+        $user = User::where('uuid', $uuid)->first();
+
+        if ($user->count() == 0) {
+            return redirect()->back()->withErrors('Data tidak ditemukan');
+        }
+
+        $user->delete();
+
+        return redirect()->route('dashboard.users.index')->with('success','Data berhasil dihapus');
     }
 }

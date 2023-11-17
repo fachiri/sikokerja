@@ -14,15 +14,15 @@ class Task extends Model
 
     protected $fillable = [
         'nama_paket',
-        'vendor',
+        'vendor_id',
         'jtm',
         'jtr',
         'gardu',
         'progres',
-        'pengawas_k3',
         'latitude',
         'longitude',
         'dokumentasi',
+        'keterangan',
     ];
 
     protected static function boot()
@@ -38,8 +38,8 @@ class Task extends Model
         return $this->hasMany(Documentation::class);
     }
 
-    public function user(): BelongsTo
+    public function vendor(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'pengawas_k3');
+        return $this->belongsTo(Vendor::class);
     }
 }

@@ -4,7 +4,7 @@
 	        'title' => 'Menu',
 	        'items' => [
 	            (object) [
-	                'label' => 'Dasbor',
+	                'label' => 'Dashboard',
 	                'icon' => 'bi bi-grid-fill',
 	                'hasSubItems' => false,
 	                'link' => route('dashboard.index'),
@@ -12,18 +12,28 @@
 							(object) [
 	                'label' => 'Pengguna',
 	                'icon' => 'bi bi-people-fill',
+									'roles' => ['ADMIN'],
 	                'hasSubItems' => false,
 	                'link' => route('dashboard.users.index'),
 	            ],
 	            (object) [
 	                'label' => 'Tambah Data',
 	                'icon' => 'bi bi-plus-square-fill',
+									'roles' => ['ADMIN'],
 	                'hasSubItems' => false,
 	                'link' => route('dashboard.add'),
+	            ],
+							(object) [
+	                'label' => 'Pekerjaan',
+	                'icon' => 'bi bi-cone-striped',
+									'roles' => ['VENDOR'],
+	                'hasSubItems' => false,
+	                'link' => route('dashboard.task'),
 	            ],
 	            (object) [
 	                'label' => 'Laporan',
 	                'icon' => 'bi bi-file-text-fill',
+									'roles' => ['ADMIN'],
 	                'hasSubItems' => false,
 	                'link' => route('dashboard.report'),
 	            ],
@@ -33,8 +43,8 @@
 	        'title' => 'Lainnya',
 	        'items' => [
 	            (object) [
-	                'label' => 'Pengaturan',
-	                'icon' => 'bi bi-gear-fill',
+	                'label' => 'Profil',
+	                'icon' => 'bi bi-person-lines-fill',
 	                'hasSubItems' => false,
 	                'link' => '#',
 	            ],
@@ -84,31 +94,37 @@
 		<div class="sidebar-menu">
 			<ul class="menu">
 				@foreach ($links as $link)
-					<li class="sidebar-title">{{ $link->title }}</li>
-					@foreach ($link->items as $item)
-						@if ($item->hasSubItems)
-							<li class="sidebar-item has-sub">
-								<a href="#" class='sidebar-link'>
-									<i class="{{ $item->icon }}"></i>
-									<span>{{ $item->label }}</span>
-								</a>
-								<ul class="submenu">
-									@foreach ($item->subItems as $subItem)
-										<li class="submenu-item">
-											<a href="{{ $subItem->link }}" class="submenu-link">{{ $subItem->label }}</a>
-										</li>
-									@endforeach
-								</ul>
-							</li>
-						@else
-							<li class="sidebar-item">
-								<a href="{{ $item->link }}" class='sidebar-link'>
-									<i class="{{ $item->icon }}"></i>
-									<span>{{ $item->label }}</span>
-								</a>
-							</li>
-						@endif
-					@endforeach
+					@if ((isset($link->roles) && in_array(auth()->user()->role, $link->roles)) || !isset($link->roles))
+						<li class="sidebar-title">{{ $link->title }}</li>
+						@foreach ($link->items as $item)
+							@if ((isset($item->roles) && in_array(auth()->user()->role, $item->roles)) || !isset($item->roles))
+								@if ($item->hasSubItems)
+									<li class="sidebar-item has-sub">
+										<a href="#" class='sidebar-link'>
+											<i class="{{ $item->icon }}"></i>
+											<span>{{ $item->label }}</span>
+										</a>
+										<ul class="submenu">
+											@foreach ($item->subItems as $subItem)
+												@if ((isset($subItem->roles) && in_array(auth()->user()->role, $subItem->roles)) || !isset($subItem->roles))
+													<li class="submenu-item">
+														<a href="{{ $subItem->link }}" class="submenu-link">{{ $subItem->label }}</a>
+													</li>
+												@endif
+											@endforeach
+										</ul>
+									</li>
+								@else
+									<li class="sidebar-item">
+										<a href="{{ $item->link }}" class='sidebar-link'>
+											<i class="{{ $item->icon }}"></i>
+											<span>{{ $item->label }}</span>
+										</a>
+									</li>
+								@endif
+							@endif
+						@endforeach
+					@endif
 				@endforeach
 			</ul>
 		</div>

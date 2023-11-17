@@ -12,12 +12,12 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->string('nama_paket');
-            $table->string('vendor');
+            $table->foreignId('vendor_id')->constrained('vendors')->onDelete('cascade');
             $table->integer('jtm');
             $table->integer('jtr');
             $table->string('gardu');
             $table->integer('progres');
-            $table->foreignId('pengawas_k3')->constrained('users')->onDelete('cascade');
+            $table->string('keterangan');
             $table->string('latitude');
             $table->string('longitude');
             $table->timestamps();

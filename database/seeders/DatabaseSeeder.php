@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         Role::insert([
             ['role' => 'ADMIN'],
-            ['role' => 'PENGAWAS']
+            ['role' => 'VENDOR']
         ]);
 
         User::create([
