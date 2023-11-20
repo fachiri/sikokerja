@@ -26,6 +26,7 @@ Route::prefix('dashboard')->middleware(['web', 'auth'])->group(function () {
         Route::post('/store', [DashboardController::class, 'store'])->name('dashboard.store');
         Route::put('/update/{uuid}', [DashboardController::class, 'update'])->name('dashboard.update');
         Route::get('/report', [DashboardController::class, 'report'])->name('dashboard.report');
+        Route::get('/report/export', [TaskController::class, 'export'])->name('dashboard.report.export');
     });
     Route::get('/pekerjaan', [TaskController::class, 'task'])->name('dashboard.task');
     Route::get('/pekerjaan/{uuid}', [TaskController::class, 'progres'])->name('dashboard.task.progres');

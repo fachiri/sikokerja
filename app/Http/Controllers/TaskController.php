@@ -7,6 +7,8 @@ use App\Models\Documentation;
 use App\Models\Task;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
+use App\Exports\TasksExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TaskController extends Controller
 {
@@ -56,5 +58,12 @@ class TaskController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
         }
+    }
+
+    public function export() 
+    {
+        $date = date('dmY');
+
+        return Excel::download(new TasksExport, 'Laporan-'.$date.'.xlsx');
     }
 }

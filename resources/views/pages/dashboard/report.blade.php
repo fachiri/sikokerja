@@ -10,6 +10,12 @@
 		<div class="col-12">
 			<div class="card">
 				<div class="card-body py-4-5 table-responsive px-4">
+					<div class="mb-3">
+						<a href="{{ route('dashboard.report.export') }}" class="btn btn-success">
+							<i class="bi bi-printer-fill"></i>
+							Download
+						</a>
+					</div>
 					<table class="table-striped table" id="tabel-tasks">
 						<thead>
 							<tr>
