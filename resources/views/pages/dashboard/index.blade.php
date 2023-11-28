@@ -21,39 +21,51 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-12">
+		<div class="col-12 col-md-6">
 			<div class="card">
 				<div class="card-body py-4-5 px-4">
+					<h5 class="mb-4">Daftar Pekerjaan</h5>
 					<table class="table">
 						<thead>
 							<tr>
-								<th>#</th>
-								<th>First</th>
-								<th>Last</th>
-								<th>Handle</th>
+								<th>No.</th>
+								<th>Nama Paket</th>
+								<th>Progres</th>
 							</tr>
 						</thead>
 						<tbody>
+							@foreach ($tasks as $task)
+								<tr>
+									<th>{{ $loop->iteration }}</th>
+									<td>{{ $task->nama_paket }}</td>
+									<td>{{ $task->progres }}%</td>
+								</tr>
+							@endforeach
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 col-md-6">
+			<div class="card">
+				<div class="card-body py-4-5 px-4">
+					<h5 class="mb-4">Daftar Vendor</h5>
+					<table class="table">
+						<thead>
 							<tr>
-								<th scope="row">1</th>
-								<td>Mark</td>
-								<td>Otto</td>
-								<td>@mdo</td>
+								<th>No.</th>
+								<th>Vendor</th>
+								<th>Pengawas K3</th>
 							</tr>
-							<tr>
-								<th scope="row">2</th>
-								<td>Jacob</td>
-								<td>Thornton</td>
-								<td>@fat</td>
-							</tr>
-							<tr>
-								<th scope="row">3</th>
-								<td colspan="2">Larry the Bird</td>
-								<td>@twitter</td>
-							</tr>
-							<tr>
-								<td></td>
-							</tr>
+						</thead>
+						<tbody>
+							@foreach ($vendors as $vendor)
+								<tr>
+									<th>{{ $loop->iteration }}</th>
+									<td>{{ $vendor->user->name }}</td>
+									<td>{{ $vendor->pengawas_k3 }}</td>
+								</tr>
+							@endforeach
 						</tbody>
 					</table>
 				</div>

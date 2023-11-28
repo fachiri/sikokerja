@@ -46,7 +46,7 @@
 	                'label' => 'Profil',
 	                'icon' => 'bi bi-person-lines-fill',
 	                'hasSubItems' => false,
-	                'link' => '#',
+	                'link' => route('dashboard.profile'),
 	            ],
 	            (object) [
 	                'label' => 'Keluar',

@@ -33,5 +33,8 @@ Route::prefix('dashboard')->middleware(['web', 'auth'])->group(function () {
     Route::put('/pekerjaan/{uuid}/pengawas', [TaskController::class, 'update_pengawas'])->name('dashboard.task.update_pengawas');
     Route::put('/pekerjaan/{uuid}/progress', [TaskController::class, 'update_progress'])->name('dashboard.task.update_progress');
     Route::get('/dokumentasi/{uuid}', [DashboardController::class, 'dokumentasi'])->name('dashboard.dokumentasi');
+    Route::get('/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
+    Route::post('/profile/update', [DashboardController::class, 'update_profile'])->name('dashboard.profile.update');
+    Route::post('/profile/change_password', [DashboardController::class, 'change_password_profile'])->name('dashboard.profile.change_password');
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
