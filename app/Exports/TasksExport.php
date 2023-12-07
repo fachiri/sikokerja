@@ -3,12 +3,13 @@
 namespace App\Exports;
 
 use App\Models\Task;
-use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class TasksExport implements FromCollection, WithHeadings
+class TasksExport implements FromView
 {
-    public function collection()
+    public function view(): View
     {
         $tasks = Task::with(['vendor.user:id,name', 'vendor:id,pengawas_k3'])
             ->select(
@@ -27,23 +28,36 @@ class TasksExport implements FromCollection, WithHeadings
             ->join('users', 'vendors.user_id', '=', 'users.id')
             ->get();
 
-
-        return $tasks;
+        return view('exports.tasks', [
+            'tasks' => $tasks
+        ]);
     }
 
-    public function headings(): array
-    {
-        return [
-            'Nama Paket',
-            'Vendor',
-            'JTM',
-            'JTR',
-            'Gardu',
-            'Progres',
-            'Pengawas K3',
-            'Keterangan',
-            'Latitude',
-            'Longitude',
-        ];
-    }
+    // public function headings(): array
+    // {
+    //     return [
+    //         [
+    //             'Monitoring Progres Pekerjaan Lisdes UP2K GORONTALO'
+    //         ],
+    //         [
+    //             'Nama Paket',
+    //             'Vendor',
+    //             'JTM',
+    //             'JTR',
+    //             'Gardu',
+    //             'Progres',
+    //             'Pengawas K3',
+    //             'Keterangan',
+    //             'Latitude',
+    //             'Longitude',
+    //         ]
+    //     ];
+    // }
+
+    // public function styles(Worksheet $sheet)
+    // {
+    //     $sheet->mergeCells('A1:J1');
+
+    //     return [];
+    // }
 }

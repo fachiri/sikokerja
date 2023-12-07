@@ -13,6 +13,7 @@ class Task extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tanggal',
         'nama_paket',
         'vendor_id',
         'jtm',
@@ -30,6 +31,8 @@ class Task extends Model
         parent::boot();
         self::creating(function ($model) {
             $model->uuid = (string) Uuid::uuid4();
+            $model->jtr = (int) str_replace(' km/s', '', $model->jtr);
+            $model->jtm = (int) str_replace(' km/s', '', $model->jtm);
         });
     }
 

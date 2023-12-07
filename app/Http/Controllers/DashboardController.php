@@ -47,19 +47,20 @@ class DashboardController extends Controller
             }
 
             $request->validate([
+                'tanggal' => 'required|date',
                 'nama_paket' => 'required|string|max:255',
                 'vendor_id' => 'required|string|max:255',
-                'jtm' => 'required|numeric',
-                'jtr' => 'required|numeric',
+                'jtm' => 'required',
+                'jtr' => 'required',
                 'gardu' => 'required|string|max:255',
-                'progres' => 'required|numeric|between:0,100',
+                'progres' => 'required|between:0,100',
                 'latitude' => 'required|string|max:255',
                 'longitude' => 'required|string|max:255',
                 'keterangan' => 'required|string|max:255',
             ] + $dokumentasiRules);
 
             $input = $request->only([
-                'nama_paket', 'vendor_id', 'jtm', 'jtr', 'gardu', 'progres', 'latitude', 'longitude', 'keterangan'
+                'tanggal', 'nama_paket', 'vendor_id', 'jtm', 'jtr', 'gardu', 'progres', 'latitude', 'longitude', 'keterangan'
             ]);
 
             $data = new Task();

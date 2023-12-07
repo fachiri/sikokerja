@@ -15,7 +15,7 @@ Route::post('/login', [AuthController::class, 'auth_login'])->name('auth.login')
 
 Route::prefix('dashboard')->middleware(['web', 'auth'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
-    Route::middleware(['roles:ADMIN'])->group(function () {
+    Route::middleware(['roles:ADMIN,MANAJER'])->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('dashboard.users.index');
         Route::post('/users', [UserController::class, 'store'])->name('dashboard.users.store');
         Route::put('/users/{uuid}', [UserController::class, 'update'])->name('dashboard.users.update');

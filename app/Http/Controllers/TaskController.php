@@ -63,7 +63,8 @@ class TaskController extends Controller
     public function export() 
     {
         $date = date('dmY');
+        $fileName = 'Laporan-'.$date.'.xlsx';
 
-        return Excel::download(new TasksExport, 'Laporan-'.$date.'.xlsx');
+        return Excel::download(new TasksExport, $fileName);
     }
 }

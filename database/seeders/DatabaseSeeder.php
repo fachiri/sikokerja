@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         Role::insert([
             ['role' => 'ADMIN'],
-            ['role' => 'VENDOR']
+            ['role' => 'VENDOR'],
+            ['role' => 'MANAJER']
         ]);
 
         User::create([
@@ -25,6 +26,15 @@ class DatabaseSeeder extends Seeder
             'role' => 'ADMIN',
             'username' => 'admin',
             'password' => Hash::make('admin')
+        ]);
+
+        User::create([
+            'name' => 'Manajer Sikokerja',
+            'email' => 'manajer@sikokerja.jejakode.com',
+            'no_telp' => '089012345678',
+            'role' => 'MANAJER',
+            'username' => 'manajer',
+            'password' => Hash::make('manajer')
         ]);
     }
 }

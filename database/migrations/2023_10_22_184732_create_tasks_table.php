@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
+            $table->date('tanggal');
             $table->string('nama_paket');
             $table->foreignId('vendor_id')->constrained('vendors')->onDelete('cascade');
             $table->integer('jtm');

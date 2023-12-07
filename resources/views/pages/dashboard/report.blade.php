@@ -28,7 +28,9 @@
 								<th>Pengawas K3</th>
 								<th>Titik Koordinat</th>
 								<th>Dokumentasi</th>
-								<th>Aksi</th>
+								@if (auth()->user()->role == 'ADMIN')
+									<th>Aksi</th>
+								@endif
 							</tr>
 						</thead>
 						<tbody>
@@ -36,8 +38,8 @@
 								<tr>
 									<td>{{ $task->nama_paket }}</td>
 									<td>{{ $task->vendor->user->name }}</td>
-									<td>{{ $task->jtm }}</td>
-									<td>{{ $task->jtr }}</td>
+									<td>{{ $task->jtm }} km/s</td>
+									<td>{{ $task->jtr }} km/s</td>
 									<td>{{ $task->gardu }}</td>
 									<td>{{ $task->progres }}%</td>
 									<td>{{ $task->vendor->pengawas_k3 ?? '-' }}</td>
@@ -47,18 +49,20 @@
 											<i class="bi bi-images"></i>
 										</a>
 									</td>
-									<td>
-										<a href="{{ route('dashboard.edit', $task->uuid) }}" class="btn btn-primary btn-sm">
-											<i class="bi bi-pencil-fill"></i>
-										</a>
-										<form action="{{ route('dashboard.delete', $task->uuid) }}" method="POST" class="d-inline">
-											@csrf
-											@method('DELETE')
-											<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-												<i class="bi bi-trash-fill"></i>
-											</button>
-										</form>
-									</td>
+									@if (auth()->user()->role == 'ADMIN')
+										<td>
+											<a href="{{ route('dashboard.edit', $task->uuid) }}" class="btn btn-primary btn-sm">
+												<i class="bi bi-pencil-fill"></i>
+											</a>
+											<form action="{{ route('dashboard.delete', $task->uuid) }}" method="POST" class="d-inline">
+												@csrf
+												@method('DELETE')
+												<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+													<i class="bi bi-trash-fill"></i>
+												</button>
+											</form>
+										</td>
+									@endif
 								</tr>
 							@endforeach
 						</tbody>

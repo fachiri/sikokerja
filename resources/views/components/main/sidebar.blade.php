@@ -12,7 +12,7 @@
 							(object) [
 	                'label' => 'Pengguna',
 	                'icon' => 'bi bi-people-fill',
-									'roles' => ['ADMIN'],
+									'roles' => ['ADMIN', 'MANAJER'],
 	                'hasSubItems' => false,
 	                'link' => route('dashboard.users.index'),
 	            ],
@@ -33,7 +33,7 @@
 	            (object) [
 	                'label' => 'Laporan',
 	                'icon' => 'bi bi-file-text-fill',
-									'roles' => ['ADMIN'],
+									'roles' => ['ADMIN', 'MANAJER'],
 	                'hasSubItems' => false,
 	                'link' => route('dashboard.report'),
 	            ],

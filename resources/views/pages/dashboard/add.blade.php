@@ -12,6 +12,13 @@
 					<form action="{{ route('dashboard.store') }}" method="POST" enctype="multipart/form-data">
 						@csrf
 						<div class="mb-3">
+							<label for="tanggal" class="form-label">Tanggal</label>
+							<input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" id="tanggal" value="{{ old('tanggal') }}">
+							@error('tanggal')
+								<div class="invalid-feedback">{{ $message }}</div>
+							@enderror
+						</div>
+						<div class="mb-3">
 							<label for="nama_paket" class="form-label">Nama Paket</label>
 							<input type="text" class="form-control @error('nama_paket') is-invalid @enderror" name="nama_paket" id="nama_paket" value="{{ old('nama_paket') }}">
 							@error('nama_paket')
@@ -32,14 +39,14 @@
 						</div>
 						<div class="mb-3">
 							<label for="jtm" class="form-label">Jaringan Tegangan Menengah (JTM)</label>
-							<input type="number" class="form-control @error('jtm') is-invalid @enderror" name="jtm" id="jtm" value="{{ old('jtm') }}">
+							<input type="text" class="km-per-s form-control @error('jtm') is-invalid @enderror" name="jtm" id="jtm" value="{{ old('jtm') }}">
 							@error('jtm')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
 						</div>
 						<div class="mb-3">
 							<label for="jtr" class="form-label">Jaringan Tegangan Rendah (JTR)</label>
-							<input type="number" class="form-control @error('jtr') is-invalid @enderror" name="jtr" id="jtr" value="{{ old('jtr') }}">
+							<input type="text" class="km-per-s form-control @error('jtr') is-invalid @enderror" name="jtr" id="jtr" value="{{ old('jtr') }}">
 							@error('jtr')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
@@ -86,7 +93,7 @@
 						</div>
 						<div class="mb-3">
 							<label for="dokumentasi" class="form-label">Dokumentasi</label>
-							<input type="file" class="multiple-files-filepond  @error('dokumentasi') is-invalid @enderror" name="dokumentasi[]" multiple>
+							<input type="file" class="multiple-files-filepond @error('dokumentasi') is-invalid @enderror" name="dokumentasi[]" multiple>
 							@error('dokumentasi')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
@@ -110,4 +117,19 @@
 	<script src="{{ asset('js/extensions/filepond-plugin-image-resize.min.js') }}"></script>
 	<script src="{{ asset('js/extensions/filepond.js') }}"></script>
 	<script src="{{ asset('js/static/add.js') }}"></script>
+	<script>
+		const inputs = document.querySelectorAll('.km-per-s');
+
+		inputs.forEach(input => {
+			input.addEventListener('input', (e) => {
+				let value = e.target.value
+				const cursorPosition = e.target.selectionStart;
+
+				value = value.replace(/[^0-9.]/g, '');
+				input.value = value + ' km/s'
+
+				e.target.setSelectionRange(e.target.value.length - 5, e.target.value.length - 5);
+			});
+		})
+	</script>
 @endpush

@@ -10,9 +10,11 @@
 		<div class="col-12">
 			<div class="card">
 				<div class="card-body py-4-5 px-4">
-					<button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addModal">
-						Tambah Pengguna
-					</button>
+					@if (auth()->user()->role == 'ADMIN')
+						<button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addModal">
+							Tambah Pengguna
+						</button>
+					@endif
 					<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
 						<div class="modal-dialog">
 							<form action="{{ route('dashboard.users.store') }}" method="POST" class="modal-content">
@@ -74,12 +76,14 @@
 						<table class="table-striped table" id="tabel-users">
 							<thead>
 								<tr>
-									<th>#</th>
+									<th>Role</th>
 									<th>Nama</th>
 									<th>Username</th>
 									<th>Email</th>
 									<th>No. Telpon</th>
-									<th>Aksi</th>
+									@if (auth()->user()->role == 'ADMIN')
+										<th>Aksi</th>
+									@endif
 								</tr>
 							</thead>
 							<tbody>
@@ -94,6 +98,10 @@
 												@case('VENDOR')
 													<small class="badge text-bg-secondary">{{ $user->role }}</small>
 												@break
+
+												@case('MANAJER')
+													<small class="badge text-bg-success">{{ $user->role }}</small>
+												@break
 	
 												@default
 													<small class="badge text-dark border border-dark">{{ $user->role }}</small>
@@ -103,73 +111,75 @@
 										<td>{{ $user->username }}</td>
 										<td>{{ $user->email }}</td>
 										<td>{{ $user->no_telp }}</td>
-										<td>
-											{{-- <a href="{{ route('dashboard.edit', $user->uuid) }}" class="btn btn-primary btn-sm">
-												<i class="bi bi-pencil-fill"></i>
-											</a> --}}
-											<!-- Button trigger modal -->
-											<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal-{{ $user->uuid }}">
-												<i class="bi bi-pencil-fill"></i>
-											</button>
-											<div class="modal fade" id="editModal-{{ $user->uuid }}" tabindex="-1" aria-labelledby="editModalLabel-{{ $user->uuid }}" aria-hidden="true">
-												<div class="modal-dialog">
-													<form action="{{ route('dashboard.users.update', $user->uuid) }}" method="POST" class="modal-content">
-														@csrf
-														@method('PUT')
-														<div class="modal-header">
-															<h1 class="modal-title fs-5" id="editModalLabel-{{ $user->uuid }}">Edit Data {{ $user->name }}</h1>
-															<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-														</div>
-														<div class="modal-body">
-															<div class="mb-3">
-																<label for="role-{{ $user->uuid }}" class="form-label">Role</label>
-																<select name="role" id="role-{{ $user->uuid }}" class="form-select">
-																	@foreach ($roles as $role)
-																		<option value="{{ $role->role }}" {{ $role->role == $user->role ? 'selected' : '' }}>{{ $role->role }}</option>
-																	@endforeach
-																</select>
-																@error('role')
-																	<div class="invalid-feedback">{{ $message }}</div>
-																@enderror
+										@if (auth()->user()->role == 'ADMIN')
+											<td>
+												{{-- <a href="{{ route('dashboard.edit', $user->uuid) }}" class="btn btn-primary btn-sm">
+													<i class="bi bi-pencil-fill"></i>
+												</a> --}}
+												<!-- Button trigger modal -->
+												<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal-{{ $user->uuid }}">
+													<i class="bi bi-pencil-fill"></i>
+												</button>
+												<div class="modal fade" id="editModal-{{ $user->uuid }}" tabindex="-1" aria-labelledby="editModalLabel-{{ $user->uuid }}" aria-hidden="true">
+													<div class="modal-dialog">
+														<form action="{{ route('dashboard.users.update', $user->uuid) }}" method="POST" class="modal-content">
+															@csrf
+															@method('PUT')
+															<div class="modal-header">
+																<h1 class="modal-title fs-5" id="editModalLabel-{{ $user->uuid }}">Edit Data {{ $user->name }}</h1>
+																<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 															</div>
-															<div class="mb-3">
-																<label for="name-{{ $user->uuid }}" class="form-label">Nama</label>
-																<input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name-{{ $user->uuid }}" value="{{ $user->name }}">
-																@error('name')
-																	<div class="invalid-feedback">{{ $message }}</div>
-																@enderror
+															<div class="modal-body">
+																<div class="mb-3">
+																	<label for="role-{{ $user->uuid }}" class="form-label">Role</label>
+																	<select name="role" id="role-{{ $user->uuid }}" class="form-select">
+																		@foreach ($roles as $role)
+																			<option value="{{ $role->role }}" {{ $role->role == $user->role ? 'selected' : '' }}>{{ $role->role }}</option>
+																		@endforeach
+																	</select>
+																	@error('role')
+																		<div class="invalid-feedback">{{ $message }}</div>
+																	@enderror
+																</div>
+																<div class="mb-3">
+																	<label for="name-{{ $user->uuid }}" class="form-label">Nama</label>
+																	<input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name-{{ $user->uuid }}" value="{{ $user->name }}">
+																	@error('name')
+																		<div class="invalid-feedback">{{ $message }}</div>
+																	@enderror
+																</div>
+																<div class="mb-3">
+																	<label for="username-{{ $user->uuid }}" class="form-label">Username</label>
+																	<input type="text" class="form-control @error('username') is-invalid @enderror" name="username" id="username-{{ $user->uuid }}" value="{{ $user->username }}">
+																	@error('username')
+																		<div class="invalid-feedback">{{ $message }}</div>
+																	@enderror
+																</div>
+																<div class="mb-3">
+																	<label for="email-{{ $user->uuid }}" class="form-label">Email</label>
+																	<input type="email" class="form-control @error('email') is-invalid @enderror" name="email" id="email-{{ $user->uuid }}" value="{{ $user->email }}">
+																	@error('email')
+																		<div class="invalid-feedback">{{ $message }}</div>
+																	@enderror
+																</div>
+																<div>
+																	<label for="no_telp-{{ $user->uuid }}" class="form-label">No. Telpon</label>
+																	<input type="text" class="form-control @error('no_telp') is-invalid @enderror" name="no_telp" id="no_telp-{{ $user->uuid }}" value="{{ $user->no_telp }}" maxlength="12">
+																	@error('no_telp')
+																		<div class="invalid-feedback">{{ $message }}</div>
+																	@enderror
+																</div>
 															</div>
-															<div class="mb-3">
-																<label for="username-{{ $user->uuid }}" class="form-label">Username</label>
-																<input type="text" class="form-control @error('username') is-invalid @enderror" name="username" id="username-{{ $user->uuid }}" value="{{ $user->username }}">
-																@error('username')
-																	<div class="invalid-feedback">{{ $message }}</div>
-																@enderror
+															<div class="modal-footer">
+																<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+																<button type="submit" class="btn btn-primary">Submit</button>
 															</div>
-															<div class="mb-3">
-																<label for="email-{{ $user->uuid }}" class="form-label">Email</label>
-																<input type="email" class="form-control @error('email') is-invalid @enderror" name="email" id="email-{{ $user->uuid }}" value="{{ $user->email }}">
-																@error('email')
-																	<div class="invalid-feedback">{{ $message }}</div>
-																@enderror
-															</div>
-															<div>
-																<label for="no_telp-{{ $user->uuid }}" class="form-label">No. Telpon</label>
-																<input type="text" class="form-control @error('no_telp') is-invalid @enderror" name="no_telp" id="no_telp-{{ $user->uuid }}" value="{{ $user->no_telp }}" maxlength="12">
-																@error('no_telp')
-																	<div class="invalid-feedback">{{ $message }}</div>
-																@enderror
-															</div>
-														</div>
-														<div class="modal-footer">
-															<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-															<button type="submit" class="btn btn-primary">Submit</button>
-														</div>
-													</form>
+														</form>
+													</div>
 												</div>
-											</div>
-											<x-modal.delete :id="'deleteModal-'. $user->uuid" :route="route('dashboard.users.delete', $user->uuid)" :data="$user->name" />
-										</td>
+												<x-modal.delete :id="'deleteModal-'. $user->uuid" :route="route('dashboard.users.delete', $user->uuid)" :data="$user->name" />
+											</td>
+										@endif
 									</tr>
 								@endforeach
 							</tbody>
