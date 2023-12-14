@@ -11,16 +11,19 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
+            $table->foreignId('vendor_id')->constrained('vendors')->onDelete('cascade');
             $table->date('tanggal');
             $table->string('nama_paket');
-            $table->foreignId('vendor_id')->constrained('vendors')->onDelete('cascade');
-            $table->integer('jtm');
-            $table->integer('jtr');
-            $table->string('gardu');
-            $table->integer('progres');
-            $table->string('keterangan');
+            $table->float('target_jtm');
+            $table->integer('nilai_kontrak_jtm');
+            $table->float('target_jtr');
+            $table->integer('nilai_kontrak_jtr');
+            $table->float('target_gardu');
+            $table->integer('nilai_kontrak_gardu');
+            $table->integer('ongkos_angkut');
             $table->string('latitude');
             $table->string('longitude');
+            $table->string('keterangan');
             $table->timestamps();
         });
     }

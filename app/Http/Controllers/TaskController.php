@@ -15,7 +15,19 @@ class TaskController extends Controller
     public function task()
     {
         $vendor = Vendor::where('user_id', auth()->user()->id)->first();
-        $tasks = Task::where('vendor_id', $vendor->id)->get();
+        $tasks = Task::where('vendor_id', $vendor->id)
+            ->with(['progress' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            }])
+            ->with('vendor')
+            ->get();
+
+        $tasks = $tasks->map(function ($task) {
+            $firstProgress = $task->progress->first();
+            $task->progress = get_progress($task, $firstProgress);
+
+            return $task;
+        });
 
         return view("pages.dashboard.task", compact("tasks"));
     }
@@ -60,10 +72,10 @@ class TaskController extends Controller
         }
     }
 
-    public function export() 
+    public function export()
     {
         $date = date('dmY');
-        $fileName = 'Laporan-'.$date.'.xlsx';
+        $fileName = 'Laporan-' . $date . '.xlsx';
 
         return Excel::download(new TasksExport, $fileName);
     }

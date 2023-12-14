@@ -6,31 +6,29 @@ use App\Models\Task;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Font;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class TasksExport implements FromView
+class TasksExport implements FromView, WithStyles
 {
     public function view(): View
     {
-        $tasks = Task::with(['vendor.user:id,name', 'vendor:id,pengawas_k3'])
-            ->select(
-                'tasks.nama_paket',
-                'users.name as nama_user',
-                'tasks.jtm',
-                'tasks.jtr',
-                'tasks.gardu',
-                'tasks.progres',
-                'vendors.pengawas_k3',
-                'tasks.keterangan',
-                'tasks.latitude',
-                'tasks.longitude'
-            )
-            ->join('vendors', 'tasks.vendor_id', '=', 'vendors.id')
-            ->join('users', 'vendors.user_id', '=', 'users.id')
-            ->get();
+        $tasks = Task::with(['progress' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }])
+            ->with('vendor')->get();
 
-        return view('exports.tasks', [
-            'tasks' => $tasks
-        ]);
+        $tasks = $tasks->map(function ($task) {
+            $firstProgress = $task->progress->first();
+            $task->progress = get_progress($task, $firstProgress);
+
+            return $task;
+        });
+
+        return view('exports.tasks', compact('tasks'));
     }
 
     // public function headings(): array
@@ -54,10 +52,45 @@ class TasksExport implements FromView
     //     ];
     // }
 
-    // public function styles(Worksheet $sheet)
-    // {
-    //     $sheet->mergeCells('A1:J1');
+    public function styles(Worksheet $sheet)
+    {
+        // Get the highest row and column with data
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
 
-    //     return [];
-    // }
+        // Define the range of cells with data
+        $cellRange = 'A2:' . $highestColumn . $highestRow;
+
+        // Apply borders only to the range with data
+        $sheet->getStyle($cellRange)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+
+        for ($col = 'A'; $col <= $highestColumn; ++$col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Set custom height for row 1 (A1:AMJ1)
+        $sheet->getRowDimension(1)->setRowHeight(25);
+
+        // Make text in row 1 bold
+        $sheet->getStyle('A2:' . $highestColumn . '2')->applyFromArray([
+            'font' => [
+                'bold' => true,
+            ],
+        ]);
+
+        $sheet->getStyle('A1:' . $highestColumn . '1')->applyFromArray([
+            'font' => [
+                'bold' => true,
+            ],
+        ]);
+
+        
+        // Vertical align content in cell A1
+        $sheet->getStyle('A1')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+
+        return [
+            // You can add additional styles here if needed
+        ];
+    }
 }

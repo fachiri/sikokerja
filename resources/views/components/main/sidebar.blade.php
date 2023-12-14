@@ -18,10 +18,17 @@
 	            ],
 	            (object) [
 	                'label' => 'Tambah Data',
-	                'icon' => 'bi bi-plus-square-fill',
-									'roles' => ['ADMIN'],
+	                'icon' => 'bi bi-file-earmark-plus-fill',
+									'roles' => ['ADMIN', 'VENDOR'],
 	                'hasSubItems' => false,
 	                'link' => route('dashboard.add'),
+	            ],
+							(object) [
+	                'label' => 'Update',
+	                'icon' => 'bi bi-pencil-fill',
+									'roles' => ['ADMIN', 'VENDOR'],
+	                'hasSubItems' => false,
+	                'link' => route('progress.add'),
 	            ],
 							(object) [
 	                'label' => 'Pekerjaan',

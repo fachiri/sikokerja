@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Documentation;
+use App\Models\Progress;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Vendor;
@@ -15,9 +16,36 @@ class DashboardController extends Controller
     public function index()
     {
         $vendors = Vendor::with('user')->get();
-        $tasks = Task::all();
+        $taskss = Task::with(['progress' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }])->get();
 
-        return view('pages.dashboard.index', compact('vendors', 'tasks'));
+        $tasks = $taskss->map(function ($task) {
+            $firstProgress = $task->progress->first();
+            $task->progress = get_progress($task, $firstProgress);
+
+            return $task;
+        });
+
+        $graph = (object) [
+            'series' => [],
+            'categories' => ['Minggu I', 'Minggu II', 'Minggu III', 'Minggu IV', 'Minggu V', 'Minggu VI', 'Minggu VII']
+        ];
+
+        foreach (Task::all() as $item) {
+            $data = [];
+            foreach ($item->progress as $progress) {
+                $progress = get_progress($item, $progress);
+                $data[] = $progress->persentase;
+            }
+
+            $graph->series[] = (object) [
+                'name' => $item->nama_paket,
+                'data' => $data
+            ];
+        }
+
+        return view('pages.dashboard.index', compact('vendors', 'tasks', 'graph'));
     }
 
     public function add()
@@ -27,11 +55,34 @@ class DashboardController extends Controller
         return view('pages.dashboard.add', compact('vendors'));
     }
 
-    public function report()
+    public function report(Request $request)
     {
-        $tasks = Task::with('vendor')->get();
+        $filter = Task::query();
 
-        return view('pages.dashboard.report', compact('tasks'));
+        if (isset($request->tanggal)) {
+            $filter->where('tanggal', $request->tanggal);
+        }
+
+        if (isset($request->vendor_id)) {
+            $filter->where('vendor_id', $request->vendor_id);
+        }
+
+        $tasks = $filter->with(['progress' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }])
+            ->with('vendor')
+            ->get();
+
+        $tasks = $tasks->map(function ($task) {
+            $firstProgress = $task->progress->first();
+            $task->progress = get_progress($task, $firstProgress);
+
+            return $task;
+        });
+
+        $vendors = Vendor::all();
+
+        return view('pages.dashboard.report', compact('tasks', 'vendors'));
     }
 
     public function store(Request $request)
@@ -50,17 +101,21 @@ class DashboardController extends Controller
                 'tanggal' => 'required|date',
                 'nama_paket' => 'required|string|max:255',
                 'vendor_id' => 'required|string|max:255',
-                'jtm' => 'required',
-                'jtr' => 'required',
-                'gardu' => 'required|string|max:255',
-                'progres' => 'required|between:0,100',
+                'nilai_kontrak_jtm' => 'required',
+                'nilai_kontrak_jtr' => 'required',
+                'nilai_kontrak_gardu' => 'required',
+                'ongkos_angkut' => 'required',
                 'latitude' => 'required|string|max:255',
                 'longitude' => 'required|string|max:255',
                 'keterangan' => 'required|string|max:255',
             ] + $dokumentasiRules);
 
+            Vendor::where('id', $request->vendor_id)->update([
+                'pengawas_k3' => $request->pengawas_k3
+            ]);
+
             $input = $request->only([
-                'tanggal', 'nama_paket', 'vendor_id', 'jtm', 'jtr', 'gardu', 'progres', 'latitude', 'longitude', 'keterangan'
+                'tanggal', 'nama_paket', 'vendor_id', 'target_jtm', 'target_jtr', 'target_gardu', 'nilai_kontrak_jtm', 'nilai_kontrak_jtr', 'nilai_kontrak_gardu', 'ongkos_angkut', 'latitude', 'longitude', 'keterangan'
             ]);
 
             $data = new Task();
@@ -75,6 +130,13 @@ class DashboardController extends Controller
                 ]);
             }
 
+            Progress::create([
+                'task_id' => $data->id,
+                'jtm' => 0,
+                'jtr' => 0,
+                'gardu' => 0
+            ]);
+
             return redirect()->route('dashboard.report')->with('success', 'Data berhasil disimpan.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
@@ -83,12 +145,19 @@ class DashboardController extends Controller
         }
     }
 
-    public function edit($uuid)
+    public function detail($uuid)
     {
-        $task = Task::where('uuid', $uuid)->first();
-        $vendors = Vendor::with('user')->get();
+        $task = Task::where('uuid', $uuid)
+            ->with(['progress' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            }])
+            ->with('vendor')
+            ->first();
 
-        return view('pages.dashboard.edit', compact('task', 'vendors'));
+        $latestProgress = $task->progress->first();
+        $progress = get_progress($task, $latestProgress);
+
+        return view('pages.dashboard.detail', compact('task', 'progress'));
     }
 
     public function update(Request $request, $uuid)
@@ -143,7 +212,7 @@ class DashboardController extends Controller
     {
         try {
             $task = Task::where('uuid', $uuid)->first();
-            
+
             if (!$task) {
                 return redirect()->route('dashboard.report')->with('error', 'Data tidak ditemukan.');
             }
@@ -186,6 +255,7 @@ class DashboardController extends Controller
         try {
             $user = User::where('id', auth()->user()->id)->firstOrFail();
             $user->name = $request->name;
+            $user->username = $request->username;
             $user->email = $request->email;
             $user->save();
 

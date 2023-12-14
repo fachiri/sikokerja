@@ -28,43 +28,90 @@
 						<div class="mb-3">
 							<label for="vendor_id" class="form-label">Vendor</label>
 							<select class="form-select @error('vendor_id') is-invalid @enderror" name="vendor_id" id="vendor_id">
-								<option value="" hidden>-- Pilih Vendor --</option>
-								@foreach ($vendors as $vendor)
-									<option value="{{ $vendor->id }}" {{ $vendor->id == old('vendor_id') ? 'selected' : '' }}>{{ $vendor->user->name }}</option>
-								@endforeach
+								@if (auth()->user()->role == 'VENDOR')
+									<option value="{{ auth()->user()->id }}" selected>{{ auth()->user()->name }}</option>
+								@else
+									<option value="" hidden>-- Pilih Vendor --</option>
+									@foreach ($vendors as $vendor)
+										<option value="{{ $vendor->id }}" {{ $vendor->id == old('vendor_id') ? 'selected' : '' }}>{{ $vendor->user->name }}</option>
+									@endforeach
+								@endif
 							</select>
 							@error('vendor_id')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
 						</div>
 						<div class="mb-3">
-							<label for="jtm" class="form-label">Jaringan Tegangan Menengah (JTM)</label>
-							<input type="text" class="km-per-s form-control @error('jtm') is-invalid @enderror" name="jtm" id="jtm" value="{{ old('jtm') }}">
-							@error('jtm')
+							<label for="pengawas_k3" class="form-label">Pengawas K3</label>
+							<input type="text" class="form-control @error('pengawas_k3') is-invalid @enderror" name="pengawas_k3" id="pengawas_k3" value="{{ old('pengawas_k3') }}">
+							@error('pengawas_k3')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
 						</div>
-						<div class="mb-3">
-							<label for="jtr" class="form-label">Jaringan Tegangan Rendah (JTR)</label>
-							<input type="text" class="km-per-s form-control @error('jtr') is-invalid @enderror" name="jtr" id="jtr" value="{{ old('jtr') }}">
-							@error('jtr')
-								<div class="invalid-feedback">{{ $message }}</div>
-							@enderror
-						</div>
-						<div class="mb-3">
-							<label for="gardu" class="form-label">Gardu</label>
-							<input type="text" class="form-control @error('gardu') is-invalid @enderror" name="gardu" id="gardu" value="{{ old('gardu') }}">
-							@error('gardu')
-								<div class="invalid-feedback">{{ $message }}</div>
-							@enderror
-						</div>
-						<div class="mb-3">
-							<label for="progres" class="form-label">Progres</label>
-							<div class="input-group">
-								<input type="number" class="form-control @error('progres') is-invalid @enderror" name="progres" id="progres" value="{{ old('progres') }}">
-								<span class="input-group-text">%</span>
+						<div class="row">
+							<div class="col-6">
+								<div class="mb-3">
+									<label for="target_jtm" class="form-label">Target Jaringan Tegangan Menengah (JTM)</label>
+									<input type="text" class="km-per-s form-control @error('target_jtm') is-invalid @enderror" name="target_jtm" id="target_jtm" value="{{ old('target_jtm') }}">
+									@error('target_jtm')
+										<div class="invalid-feedback">{{ $message }}</div>
+									@enderror
+								</div>
 							</div>
-							@error('progres')
+							<div class="col-6">
+								<div class="mb-3">
+									<label for="nilai_kontrak_jtm" class="form-label">Nilai Kontrak JTM</label>
+									<input type="text" class="rupiah form-control @error('nilai_kontrak_jtm') is-invalid @enderror" name="nilai_kontrak_jtm" id="nilai_kontrak_jtm" value="{{ old('nilai_kontrak_jtm') }}">
+									@error('nilai_kontrak_jtm')
+										<div class="invalid-feedback">{{ $message }}</div>
+									@enderror
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-6">
+								<div class="mb-3">
+									<label for="target_jtr" class="form-label">Target Jaringan Tegangan Rendah (JTR)</label>
+									<input type="text" class="km-per-s form-control @error('target_jtr') is-invalid @enderror" name="target_jtr" id="target_jtr" value="{{ old('target_jtr') }}">
+									@error('target_jtr')
+										<div class="invalid-feedback">{{ $message }}</div>
+									@enderror
+								</div>
+							</div>
+							<div class="col-6">
+								<div class="mb-3">
+									<label for="nilai_kontrak_jtr" class="form-label">Nilai Kontrak JTR</label>
+									<input type="text" class="rupiah form-control @error('nilai_kontrak_jtr') is-invalid @enderror" name="nilai_kontrak_jtr" id="nilai_kontrak_jtr" value="{{ old('nilai_kontrak_jtr') }}">
+									@error('nilai_kontrak_jtr')
+										<div class="invalid-feedback">{{ $message }}</div>
+									@enderror
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-6">
+								<div class="mb-3">
+									<label for="target_gardu" class="form-label">Target Gardu</label>
+									<input type="text" class="form-control @error('target_gardu') is-invalid @enderror" name="target_gardu" id="target_gardu" value="{{ old('target_gardu') }}">
+									@error('target_gardu')
+										<div class="invalid-feedback">{{ $message }}</div>
+									@enderror
+								</div>
+							</div>
+							<div class="col-6">
+								<div class="mb-3">
+									<label for="nilai_kontrak_gardu" class="form-label">Nilai Kontrak Gardu</label>
+									<input type="text" class="rupiah form-control @error('nilai_kontrak_gardu') is-invalid @enderror" name="nilai_kontrak_gardu" id="nilai_kontrak_gardu" value="{{ old('nilai_kontrak_gardu') }}">
+									@error('nilai_kontrak_gardu')
+										<div class="invalid-feedback">{{ $message }}</div>
+									@enderror
+								</div>
+							</div>
+						</div>
+						<div class="mb-3">
+							<label for="ongkos_angkut" class="form-label">Ongkos Angkut</label>
+							<input type="text" class="rupiah form-control @error('ongkos_angkut') is-invalid @enderror" name="ongkos_angkut" id="ongkos_angkut" value="{{ old('ongkos_angkut') }}">
+							@error('ongkos_angkut')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
 						</div>
@@ -119,6 +166,7 @@
 	<script src="{{ asset('js/static/add.js') }}"></script>
 	<script>
 		const inputs = document.querySelectorAll('.km-per-s');
+		const rupiah = document.querySelectorAll('.rupiah');
 
 		inputs.forEach(input => {
 			input.addEventListener('input', (e) => {
@@ -131,5 +179,28 @@
 				e.target.setSelectionRange(e.target.value.length - 5, e.target.value.length - 5);
 			});
 		})
+
+		rupiah.forEach(input => {
+			input.addEventListener('keyup', function() {
+				this.value = formatRupiah(this.value, 'Rp. ');
+			});
+		});
+
+		function formatRupiah(angka, prefix) {
+			var number_string = angka.replace(/[^,\d]/g, '').toString(),
+				split = number_string.split(','),
+				sisa = split[0].length % 3,
+				rupiah = split[0].substr(0, sisa),
+				ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+			// tambahkan titik jika yang di input sudah menjadi angka ribuan
+			if (ribuan) {
+				separator = sisa ? '.' : '';
+				rupiah += separator + ribuan.join('.');
+			}
+
+			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+			return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+		}
 	</script>
 @endpush

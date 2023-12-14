@@ -10,23 +10,54 @@
 		<div class="col-12">
 			<div class="card">
 				<div class="card-body py-4-5 table-responsive px-4">
-					<div class="mb-3">
-						<a href="{{ route('dashboard.report.export') }}" class="btn btn-success">
-							<i class="bi bi-printer-fill"></i>
-							Download
-						</a>
-					</div>
+					<form action="{{ route('dashboard.report') }}" method="get">
+						<div class="row">
+							<div class="col-6 mb-3">
+								<label for="tanggal" class="form-label">Tanggal</label>
+								<input type="date" class="form-control" name="tanggal" id="tanggal" value="{{ request('tanggal') }}">
+							</div>
+							<div class="col-6 mb-3">
+								<label for="vendor_id" class="form-label">Paket</label>
+								<select class="form-select @error('vendor_id') is-invalid @enderror" name="vendor_id" id="vendor_id">
+									<option value="" hidden>Pilih Vendor</option>
+									@foreach ($vendors as $item)
+										<option value="{{ $item->id }}" {{ $item->id == request('vendor_id') ? 'selected' : '' }}>{{ $item->user->name }}</option>
+									@endforeach
+								</select>
+							</div>
+							<div class="col-8 mb-3">
+								<button type="submit" class="btn btn-primary w-100">
+									<i class="bi bi-funnel-fill"></i>
+									Filter
+								</button>
+							</div>
+							<div class="col-4 mb-3">
+								<a href="{{ route('dashboard.report.export') }}" class="btn btn-success w-100">
+									<i class="bi bi-printer-fill"></i>
+									Download
+								</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="col-12">
+			<div class="card">
+				<div class="card-body py-4-5 table-responsive px-4">
 					<table class="table-striped table" id="tabel-tasks">
 						<thead>
 							<tr>
+								<th>Tanggal</th>
 								<th>Nama Paket</th>
 								<th>Vendor</th>
-								<th>JTM</th>
-								<th>JTR</th>
-								<th>Gardu</th>
+								<th>Target JTM</th>
+								<th>Target JTR</th>
+								<th>Target Gardu</th>
 								<th>Progres</th>
 								<th>Pengawas K3</th>
 								<th>Titik Koordinat</th>
+								<th>Keterangan</th>
 								<th>Dokumentasi</th>
 								@if (auth()->user()->role == 'ADMIN')
 									<th>Aksi</th>
@@ -36,23 +67,25 @@
 						<tbody>
 							@foreach ($tasks as $task)
 								<tr>
+									<td>{{ $task->tanggal }}</td>
 									<td>{{ $task->nama_paket }}</td>
 									<td>{{ $task->vendor->user->name }}</td>
-									<td>{{ $task->jtm }} km/s</td>
-									<td>{{ $task->jtr }} km/s</td>
-									<td>{{ $task->gardu }}</td>
-									<td>{{ $task->progres }}%</td>
+									<td>{{ $task->target_jtm }} km/s</td>
+									<td>{{ $task->target_jtr }} km/s</td>
+									<td>{{ $task->target_gardu }}</td>
+									<td>{{ $task->progress->persentase }}%</td>
 									<td>{{ $task->vendor->pengawas_k3 ?? '-' }}</td>
 									<td>{{ $task->latitude }}, {{ $task->longitude }}</td>
+									<td>{{ $task->keterangan }}</td>
 									<td>
 										<a href="{{ route('dashboard.dokumentasi', $task->uuid) }}" class="btn btn-primary btn-sm m-1">
 											<i class="bi bi-images"></i>
 										</a>
 									</td>
 									@if (auth()->user()->role == 'ADMIN')
-										<td>
-											<a href="{{ route('dashboard.edit', $task->uuid) }}" class="btn btn-primary btn-sm">
-												<i class="bi bi-pencil-fill"></i>
+										<td style="white-space: nowrap">
+											<a href="{{ route('dashboard.detail', $task->uuid) }}" class="btn btn-primary btn-sm">
+												<i class="bi bi-list-ul"></i>
 											</a>
 											<form action="{{ route('dashboard.delete', $task->uuid) }}" method="POST" class="d-inline">
 												@csrf

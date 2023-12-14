@@ -38,7 +38,7 @@
 								<tr>
 									<th>{{ $loop->iteration }}</th>
 									<td>{{ $task->nama_paket }}</td>
-									<td>{{ $task->progres }}%</td>
+									<td>{{ $task->progress->persentase }}%</td>
 								</tr>
 							@endforeach
 						</tbody>
@@ -71,9 +71,32 @@
 				</div>
 			</div>
 		</div>
+		<div class="col-12">
+			<div class="card">
+				<div class="card-body py-4-5 px-4">
+					<h5 class="mb-4">Kurva</h5>
+					<div id="line"></div>
+				</div>
+			</div>
+		</div>
 	</section>
 @endsection
 @push('scripts')
 	<script src="{{ asset('js/extensions/apexcharts.min.js') }}"></script>
-	<script></script>
+	<script>
+		const graph = @json($graph);
+
+		const lineOptions = {
+			chart: {
+				type: "line",
+			},
+			series: graph.series,
+			xaxis: {
+				categories: graph.categories,
+			},
+		}
+
+		const line = new ApexCharts(document.querySelector("#line"), lineOptions)
+		line.render()
+	</script>
 @endpush

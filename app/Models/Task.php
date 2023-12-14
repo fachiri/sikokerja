@@ -16,13 +16,15 @@ class Task extends Model
         'tanggal',
         'nama_paket',
         'vendor_id',
-        'jtm',
-        'jtr',
-        'gardu',
-        'progres',
+        'target_jtm',
+        'nilai_kontrak_jtm',
+        'target_jtr',
+        'nilai_kontrak_jtr',
+        'target_gardu',
+        'nilai_kontrak_gardu',
+        'ongkos_angkut',
         'latitude',
         'longitude',
-        'dokumentasi',
         'keterangan',
     ];
 
@@ -31,8 +33,12 @@ class Task extends Model
         parent::boot();
         self::creating(function ($model) {
             $model->uuid = (string) Uuid::uuid4();
-            $model->jtr = (int) str_replace(' km/s', '', $model->jtr);
-            $model->jtm = (int) str_replace(' km/s', '', $model->jtm);
+            $model->target_jtr = (float) str_replace(' km/s', '', $model->target_jtr);
+            $model->nilai_kontrak_jtr = (int) str_replace(['Rp. ', '.'], '', $model->nilai_kontrak_jtr);
+            $model->target_jtm = (float) str_replace(' km/s', '', $model->target_jtm);
+            $model->nilai_kontrak_jtm = (int) str_replace(['Rp. ', '.'], '', $model->nilai_kontrak_jtm);
+            $model->nilai_kontrak_gardu = (int) str_replace(['Rp. ', '.'], '', $model->nilai_kontrak_gardu);
+            $model->ongkos_angkut = (int) str_replace(['Rp. ', '.'], '', $model->ongkos_angkut);
         });
     }
 
@@ -44,5 +50,10 @@ class Task extends Model
     public function vendor(): BelongsTo
     {
         return $this->belongsTo(Vendor::class);
+    }
+
+    public function progress(): HasMany
+    {
+        return $this->hasMany(Progress::class);
     }
 }
