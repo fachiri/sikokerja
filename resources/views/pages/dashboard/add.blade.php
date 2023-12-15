@@ -28,14 +28,10 @@
 						<div class="mb-3">
 							<label for="vendor_id" class="form-label">Vendor</label>
 							<select class="form-select @error('vendor_id') is-invalid @enderror" name="vendor_id" id="vendor_id">
-								@if (auth()->user()->role == 'VENDOR')
-									<option value="{{ auth()->user()->id }}" selected>{{ auth()->user()->name }}</option>
-								@else
-									<option value="" hidden>-- Pilih Vendor --</option>
-									@foreach ($vendors as $vendor)
-										<option value="{{ $vendor->id }}" {{ $vendor->id == old('vendor_id') ? 'selected' : '' }}>{{ $vendor->user->name }}</option>
-									@endforeach
-								@endif
+								<option value="" hidden>-- Pilih Vendor --</option>
+								@foreach ($vendors as $vendor)
+									<option value="{{ $vendor->id }}" {{ $vendor->id == old('vendor_id') ? 'selected' : '' }}>{{ $vendor->user->name }}</option>
+								@endforeach
 							</select>
 							@error('vendor_id')
 								<div class="invalid-feedback">{{ $message }}</div>

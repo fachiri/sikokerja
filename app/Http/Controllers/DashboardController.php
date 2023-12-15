@@ -50,7 +50,14 @@ class DashboardController extends Controller
 
     public function add()
     {
-        $vendors = Vendor::with('user')->get();
+        $query = Vendor::query();
+
+        if (auth()->user()->role == 'VENDOR') {
+            $user = User::where('id', auth()->user()->id)->first();
+            $query = $query->where('user_id', $user->id);
+        }
+
+        $vendors = $query->with('user')->get();
 
         return view('pages.dashboard.add', compact('vendors'));
     }
@@ -136,6 +143,10 @@ class DashboardController extends Controller
                 'jtr' => 0,
                 'gardu' => 0
             ]);
+
+            if (auth()->user()->role == 'VENDOR') {
+                return redirect()->route('dashboard.task')->with('success', 'Data berhasil disimpan.');
+            }
 
             return redirect()->route('dashboard.report')->with('success', 'Data berhasil disimpan.');
         } catch (\Illuminate\Validation\ValidationException $e) {
