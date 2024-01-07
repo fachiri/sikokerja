@@ -3,23 +3,40 @@
 namespace App\Exports;
 
 use App\Models\Task;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Font;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class TasksExport implements FromView, WithStyles
 {
+    protected $filter;
+
+    public function __construct($filter)
+    {
+        $this->filter = $filter;
+    }
+
     public function view(): View
     {
-        $tasks = Task::with(['progress' => function ($query) {
+        $filter = Task::query();
+
+        // Apply filters if they are provided
+        if ($this->filter['tanggal']) {
+            $filter->where('tanggal', $this->filter['tanggal']);
+        }
+
+        if ($this->filter['vendor_id']) {
+            $filter->where('vendor_id', $this->filter['vendor_id']);
+        }
+
+        $tasks = $filter->with(['progress' => function ($query) {
             $query->orderBy('created_at', 'desc');
         }])
             ->with('vendor')->get();
+
 
         $tasks = $tasks->map(function ($task) {
             $firstProgress = $task->progress->first();
@@ -30,27 +47,6 @@ class TasksExport implements FromView, WithStyles
 
         return view('exports.tasks', compact('tasks'));
     }
-
-    // public function headings(): array
-    // {
-    //     return [
-    //         [
-    //             'Monitoring Progres Pekerjaan Lisdes UP2K GORONTALO'
-    //         ],
-    //         [
-    //             'Nama Paket',
-    //             'Vendor',
-    //             'JTM',
-    //             'JTR',
-    //             'Gardu',
-    //             'Progres',
-    //             'Pengawas K3',
-    //             'Keterangan',
-    //             'Latitude',
-    //             'Longitude',
-    //         ]
-    //     ];
-    // }
 
     public function styles(Worksheet $sheet)
     {

@@ -12,9 +12,10 @@
 		<table>
 			<thead>
 				<tr>
-					<th colspan="11" style="text-align: center;">Monitoring Progres Pekerjaan Lisdes UP2K GORONTALO</th>
+					<th colspan="12" style="text-align: center;">Monitoring Progres Pekerjaan Lisdes UP2K GORONTALO</th>
 				</tr>
 				<tr>
+					<th>Tanggal</th>
 					<th>Nama Paket</th>
 					<th>Nama Vendor</th>
 					<th>Pengawas K3</th>
@@ -31,11 +32,12 @@
 			<tbody>
 				@foreach ($tasks as $task)
 					<tr>
+						<td>{{ $task->tanggal }}</td>
 						<td>{{ $task->nama_paket }}</td>
 						<td>{{ $task->vendor->user->name }}</td>
 						<td>{{ $task->vendor->pengawas_k3 }}</td>
-						<td>{{ $task->target_jtm }} km/s</td>
-						<td>{{ $task->target_jtr }} km/s</td>
+						<td>{{ $task->target_jtm }} kms</td>
+						<td>{{ $task->target_jtr }} kms</td>
 						<td>{{ $task->target_gardu }}</td>
 						<td class="format-rupiah">{{ $task->ongkos_angkut }}</td>
 						<td>{{ $task->progress->persentase }}%</td>

@@ -29,6 +29,7 @@ Route::prefix('dashboard')->middleware(['web', 'auth'])->group(function () {
     });
     Route::get('/add', [DashboardController::class, 'add'])->name('dashboard.add');
     Route::get('/detail/{uuid}', [DashboardController::class, 'detail'])->name('dashboard.detail');
+    Route::get('/edit/{uuid}', [DashboardController::class, 'edit'])->name('dashboard.edit');
     Route::put('/update/{uuid}', [DashboardController::class, 'update'])->name('dashboard.update');
     Route::delete('/delete/{uuid}', [DashboardController::class, 'delete'])->name('dashboard.delete');
     Route::post('/store', [DashboardController::class, 'store'])->name('dashboard.store');
@@ -37,6 +38,7 @@ Route::prefix('dashboard')->middleware(['web', 'auth'])->group(function () {
     Route::put('/pekerjaan/{uuid}/pengawas', [TaskController::class, 'update_pengawas'])->name('dashboard.task.update_pengawas');
     Route::put('/pekerjaan/{uuid}/progress', [TaskController::class, 'update_progress'])->name('dashboard.task.update_progress');
     Route::get('/dokumentasi/{uuid}', [DashboardController::class, 'dokumentasi'])->name('dashboard.dokumentasi');
+    Route::get('/dokumentasi/{uuid}/download', [DashboardController::class, 'dokumentasi_download'])->name('dashboard.dokumentasi.download');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
     Route::post('/profile/update', [DashboardController::class, 'update_profile'])->name('dashboard.profile.update');
     Route::post('/profile/change_password', [DashboardController::class, 'change_password_profile'])->name('dashboard.profile.change_password');

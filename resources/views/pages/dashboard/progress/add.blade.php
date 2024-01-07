@@ -36,7 +36,7 @@
 							<div class="col-6">
 								<div class="mb-3">
 									<label for="target_jtm" class="form-label">Target JTM</label>
-									<input type="text" class="form-control" id="target_jtm" value="{{ $task?->target_jtm ?? '0' }} km/s" disabled>
+									<input type="text" class="form-control" id="target_jtm" value="{{ $task?->target_jtm ?? '0' }} kms" disabled>
 								</div>
 							</div>
 						</div>
@@ -53,7 +53,7 @@
 							<div class="col-6">
 								<div class="mb-3">
 									<label for="target_jtr" class="form-label">Target JTR</label>
-									<input type="text" class="form-control" id="target_jtr" value="{{ $task?->target_jtr ?? '0' }} km/s" disabled>
+									<input type="text" class="form-control" id="target_jtr" value="{{ $task?->target_jtr ?? '0' }} kms" disabled>
 							</div>
 						</div>
 						<div class="row">
@@ -111,9 +111,9 @@
 				const cursorPosition = e.target.selectionStart;
 
 				value = value.replace(/[^0-9.]/g, '');
-				input.value = value + ' km/s'
+				input.value = value + ' kms'
 
-				e.target.setSelectionRange(e.target.value.length - 5, e.target.value.length - 5);
+				e.target.setSelectionRange(e.target.value.length - 4, e.target.value.length - 4);
 			});
 		})
 

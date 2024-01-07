@@ -43,3 +43,19 @@ if (!function_exists('get_progress')) {
       return $progress;
     }
 }
+
+if (!function_exists('formatRupiah')) {
+  function formatRupiah($angka)
+  {
+      $rupiah = "Rp. " . number_format($angka, 0, ',', '.');
+      return $rupiah;
+  }
+}
+
+if (!function_exists('formatKms')) {
+  function formatKms($angka)
+  {
+      $kms = $angka. " kms";
+      return $kms;
+  }
+}

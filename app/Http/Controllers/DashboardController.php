@@ -10,6 +10,7 @@ use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class DashboardController extends Controller
 {
@@ -171,49 +172,24 @@ class DashboardController extends Controller
         return view('pages.dashboard.detail', compact('task', 'progress'));
     }
 
+    public function edit($uuid)
+    {
+        $vendors = Vendor::all();
+        $task = Task::where('uuid', $uuid)->with('vendor')->first();
+
+        return view('pages.dashboard.edit', compact('task', 'vendors'));
+    }
+
     public function update(Request $request, $uuid)
     {
         try {
-            $dokumentasiRules = [];
-            if ($request->hasFile('dokumentasi')) {
-                foreach ($request->file('dokumentasi') as $key => $file) {
-                    $dokumentasiRules["dokumentasi.{$key}"] = 'nullable|file|mimes:jpeg,png,pdf|max:2048';
-                }
-            } else {
-                $dokumentasiRules["dokumentasi"] = 'nullable|file|mimes:jpeg,png,pdf|max:2048';
-            }
-
-            $request->validate([
-                'nama_paket' => 'required|string|max:255',
-                'vendor_id' => 'required|string|max:255',
-                'jtm' => 'required|numeric',
-                'jtr' => 'required|numeric',
-                'gardu' => 'required|string|max:255',
-                'progres' => 'required|numeric|between:0,100',
-                'keterangan' => 'required|string|max:255',
-                'latitude' => 'required|string|max:255',
-                'longitude' => 'required|string|max:255',
-            ] + $dokumentasiRules);
-
-            $input = $request->only([
-                'nama_paket', 'vendor_id', 'jtm', 'jtr', 'gardu', 'progres', 'latitude', 'longitude', 'keterangan'
-            ]);
-
             $data = Task::where('uuid', $uuid)->first();
+            $input = $request->except(['pengawas_k3', '_token', '_method']);
+
             $data->fill($input);
             $data->save();
 
-            if ($request->hasFile('dokumentasi')) {
-                foreach ($request->file('dokumentasi') as $file) {
-                    $filePath = $file->store('public/dokumentasi');
-                    Documentation::create([
-                        'task_id' => $data->id,
-                        'dokumentasi' => basename($filePath)
-                    ]);
-                }
-            }
-
-            return redirect()->route('dashboard.edit', $data->uuid)->with('success', 'Data berhasil diedit.');
+            return redirect()->route('dashboard.edit', $uuid)->with('success', 'Data berhasil diedit.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
         }
@@ -247,6 +223,36 @@ class DashboardController extends Controller
         $task = Task::where('uuid', $uuid)->with('documentations')->first();
 
         return view('pages.dashboard.documentation', compact('task'));
+    }
+
+    public function dokumentasi_download($uuid)
+    {
+        $task = Task::where('uuid', $uuid)->with('documentations')->first();
+
+        $documentations = $task->documentations;
+
+        $zip = new ZipArchive;
+        $zipFileName = 'dokumentasi_' . $task->nama_paket . '_' . $uuid . '.zip';
+        $zipFilePath = storage_path('app/public/' . $zipFileName);
+
+        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+            foreach ($documentations as $data) {
+                $filePath = storage_path('app/public/dokumentasi/' . $data->dokumentasi);
+
+                if (file_exists($filePath)) {
+                    // Tambahkan file ke dalam zip dengan nama yang sesuai
+                    $zip->addFile($filePath, $data->dokumentasi);
+                }
+            }
+
+            $zip->close();
+
+            // Set header untuk download
+            return response()->download($zipFilePath)->deleteFileAfterSend(true);
+        } else {
+            // Handle error saat membuat zip
+            return response()->json(['error' => 'Gagal membuat file zip'], 500);
+        }
     }
 
     public function profile()

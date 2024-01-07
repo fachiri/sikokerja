@@ -32,7 +32,7 @@
 								</button>
 							</div>
 							<div class="col-4 mb-3">
-								<a href="{{ route('dashboard.report.export') }}" class="btn btn-success w-100">
+								<a href="{{ route('dashboard.report.export', request()->all()) }}" class="btn btn-success w-100">
 									<i class="bi bi-printer-fill"></i>
 									Download
 								</a>
@@ -70,8 +70,8 @@
 									<td>{{ $task->tanggal }}</td>
 									<td>{{ $task->nama_paket }}</td>
 									<td>{{ $task->vendor->user->name }}</td>
-									<td>{{ $task->target_jtm }} km/s</td>
-									<td>{{ $task->target_jtr }} km/s</td>
+									<td>{{ $task->target_jtm }} kms</td>
+									<td>{{ $task->target_jtr }} kms</td>
 									<td>{{ $task->target_gardu }}</td>
 									<td>{{ $task->progress->persentase }}%</td>
 									<td>{{ $task->vendor->pengawas_k3 ?? '-' }}</td>
@@ -86,6 +86,9 @@
 										<td style="white-space: nowrap">
 											<a href="{{ route('dashboard.detail', $task->uuid) }}" class="btn btn-primary btn-sm">
 												<i class="bi bi-list-ul"></i>
+											</a>
+											<a href="{{ route('dashboard.edit', $task->uuid) }}" class="btn btn-warning btn-sm">
+												<i class="bi bi-pencil-square"></i>
 											</a>
 											<form action="{{ route('dashboard.delete', $task->uuid) }}" method="POST" class="d-inline">
 												@csrf

@@ -23,8 +23,8 @@ class Progress extends Model
         parent::boot();
         self::creating(function ($model) {
             $model->uuid = (string) Uuid::uuid4();
-            $model->jtr = (float) str_replace(' km/s', '', $model->jtr);
-            $model->jtm = (float) str_replace(' km/s', '', $model->jtm);
+            $model->jtr = (float) str_replace(' kms', '', $model->jtr);
+            $model->jtm = (float) str_replace(' kms', '', $model->jtm);
         });
     }
 

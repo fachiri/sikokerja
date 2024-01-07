@@ -72,11 +72,17 @@ class TaskController extends Controller
         }
     }
 
-    public function export()
+    public function export(Request $request)
     {
         $date = date('dmY');
         $fileName = 'Laporan-' . $date . '.xlsx';
 
-        return Excel::download(new TasksExport, $fileName);
+        // Get the filter parameters from the request
+        $filter = [
+            'tanggal' => $request->tanggal ?? null,
+            'vendor_id' => $request->vendor_id ?? null,
+        ];
+
+        return Excel::download(new TasksExport($filter), $fileName);
     }
 }

@@ -21,7 +21,7 @@
 						</tr>
 						<tr>
 							<th>Target JTM</th>
-							<td>{{ $task->target_jtm }} km/s</td>
+							<td>{{ $task->target_jtm }} kms</td>
 						</tr>
 						<tr>
 							<th>Nilai Kontrak JTM</th>
@@ -29,7 +29,7 @@
 						</tr>
 						<tr>
 							<th>Target JTR</th>
-							<td>{{ $task->target_jtr }} km/s</td>
+							<td>{{ $task->target_jtr }} kms</td>
 						</tr>
 						<tr>
 							<th>Nilai Kontrak JTR</th>
@@ -115,6 +115,42 @@
 							</tr>
 						</tbody>
 					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 col-md-6">
+			<div class="card">
+				<div class="card-body py-4-5 px-4">
+					<h5 class="mb-4">Tulis Komentar</h5>
+					<form {{-- action="{{ route('dashboard.store') }}"  --}} method="POST">
+						@csrf
+						<div class="mb-3">
+							<textarea class="form-control @error('komentar') is-invalid @enderror" name="komentar" id="komentar">{{ old('komentar') }}</textarea>
+							@error('komentar')
+								<div class="invalid-feedback">{{ $message }}</div>
+							@enderror
+						</div>
+						<div class="pt-3">
+							<button type="submit" class="btn btn-primary">Kirim</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 col-md-6">
+			<div class="card">
+				<div class="card-body py-4-5 px-4">
+					<h5 class="mb-4">Komentar</h5>
+					<div>
+						<div class="rounded border p-3">
+							<div class="d-flex align-items-center mb-1">
+								<h6 class="mb-0">Admin</h6>
+								<span class="ms-2">-</span>
+								<small class="ms-2">19:30</small>
+							</div>
+							<div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro corporis quos dolorum ad possimus ipsam tempore deserunt nisi fugiat recusandae.</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
