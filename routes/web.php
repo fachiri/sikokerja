@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
@@ -33,6 +34,7 @@ Route::prefix('dashboard')->middleware(['web', 'auth'])->group(function () {
     Route::put('/update/{uuid}', [DashboardController::class, 'update'])->name('dashboard.update');
     Route::delete('/delete/{uuid}', [DashboardController::class, 'delete'])->name('dashboard.delete');
     Route::post('/store', [DashboardController::class, 'store'])->name('dashboard.store');
+    Route::post('/comment/{uuid}', [CommentController::class, 'store'])->name('dashboard.comment.store');
     Route::get('/pekerjaan', [TaskController::class, 'task'])->name('dashboard.task');
     Route::get('/pekerjaan/{uuid}', [TaskController::class, 'progres'])->name('dashboard.task.progres');
     Route::put('/pekerjaan/{uuid}/pengawas', [TaskController::class, 'update_pengawas'])->name('dashboard.task.update_pengawas');

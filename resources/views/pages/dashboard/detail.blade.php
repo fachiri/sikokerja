@@ -122,11 +122,11 @@
 			<div class="card">
 				<div class="card-body py-4-5 px-4">
 					<h5 class="mb-4">Tulis Komentar</h5>
-					<form {{-- action="{{ route('dashboard.store') }}"  --}} method="POST">
+					<form action="{{ route('dashboard.comment.store', $task->uuid) }}"  method="POST">
 						@csrf
 						<div class="mb-3">
-							<textarea class="form-control @error('komentar') is-invalid @enderror" name="komentar" id="komentar">{{ old('komentar') }}</textarea>
-							@error('komentar')
+							<textarea class="form-control @error('comment') is-invalid @enderror" name="comment" id="comment">{{ old('comment') }}</textarea>
+							@error('comment')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
 						</div>
@@ -141,15 +141,17 @@
 			<div class="card">
 				<div class="card-body py-4-5 px-4">
 					<h5 class="mb-4">Komentar</h5>
-					<div>
-						<div class="rounded border p-3">
-							<div class="d-flex align-items-center mb-1">
-								<h6 class="mb-0">Admin</h6>
-								<span class="ms-2">-</span>
-								<small class="ms-2">19:30</small>
+					<div class="d-flex flex-column gap-3">
+						@foreach ($task->comments as $comment)
+							<div class="rounded border p-3">
+								<div class="d-flex align-items-center mb-1">
+									<h6 class="mb-0">{{ $comment->user->name }}</h6>
+									<span class="ms-2">-</span>
+									<small class="ms-2">{{ formatChatTime($comment->created_at) }}</small>
+								</div>
+								<div>{{ $comment->comment }}</div>
 							</div>
-							<div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro corporis quos dolorum ad possimus ipsam tempore deserunt nisi fugiat recusandae.</div>
-						</div>
+						@endforeach
 					</div>
 				</div>
 			</div>

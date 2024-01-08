@@ -160,10 +160,15 @@ class DashboardController extends Controller
     public function detail($uuid)
     {
         $task = Task::where('uuid', $uuid)
-            ->with(['progress' => function ($query) {
-                $query->orderBy('created_at', 'desc');
-            }])
-            ->with('vendor')
+            ->with([
+                'progress' => function ($query) {
+                    $query->orderBy('created_at', 'desc');
+                },
+                'vendor',
+                'comments' => function ($query) {
+                    $query->with('user')->orderBy('created_at', 'desc');
+                },
+            ])
             ->first();
 
         $latestProgress = $task->progress->first();

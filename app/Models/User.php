@@ -41,4 +41,9 @@ class User extends Authenticatable
             $model->uuid = (string) Uuid::uuid4();
         });
     }
+
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
 }

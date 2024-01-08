@@ -59,3 +59,11 @@ if (!function_exists('formatKms')) {
       return $kms;
   }
 }
+
+if (!function_exists('formatChatTime')) {
+  function formatChatTime($timestamp)
+  {
+      // Tambahkan logika format waktu sesuai kebutuhan Anda
+      return \Carbon\Carbon::parse($timestamp)->diffForHumans();
+  }
+}
