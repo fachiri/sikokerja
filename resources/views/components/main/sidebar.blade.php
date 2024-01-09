@@ -17,14 +17,14 @@
 	                'link' => route('dashboard.users.index'),
 	            ],
 	            (object) [
-	                'label' => 'Tambah Data',
+	                'label' => 'Tambah Data Pekerjaan',
 	                'icon' => 'bi bi-file-earmark-plus-fill',
 									'roles' => ['ADMIN', 'VENDOR'],
 	                'hasSubItems' => false,
 	                'link' => route('dashboard.add'),
 	            ],
 							(object) [
-	                'label' => 'Update',
+	                'label' => 'Update Pekerjaan',
 	                'icon' => 'bi bi-pencil-fill',
 									'roles' => ['ADMIN', 'VENDOR'],
 	                'hasSubItems' => false,
